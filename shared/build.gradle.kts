@@ -28,6 +28,10 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                // Android Studio Preview support
+                //implementation("androidx.compose.ui:ui-tooling-preview")
+                implementation("androidx.compose.material3:material3:1.1.2")
+
             }
         }
         val androidMain by getting {
@@ -35,6 +39,7 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
+                //implementation("androidx.compose.material3:material3:1.1.2")
             }
         }
         val iosX64Main by getting
@@ -72,4 +77,7 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+}
+dependencies {
+    implementation("androidx.compose.material3:material3:1.1.2")
 }
