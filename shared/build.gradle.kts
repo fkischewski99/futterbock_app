@@ -25,12 +25,12 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material)
+                implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 // Android Studio Preview support
                 //implementation("androidx.compose.ui:ui-tooling-preview")
-                implementation("androidx.compose.material3:material3:1.1.2")
+                //implementation("androidx.compose.material3:material3:1.1.2")
 
             }
         }
@@ -77,7 +77,4 @@ android {
     kotlin {
         jvmToolchain(17)
     }
-}
-dependencies {
-    implementation("androidx.compose.material3:material3:1.1.2")
 }

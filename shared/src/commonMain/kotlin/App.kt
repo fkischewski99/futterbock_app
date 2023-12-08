@@ -1,14 +1,21 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
+@OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     MaterialTheme {
@@ -39,12 +45,12 @@ fun App() {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                elevation = 4.dp // Adjust elevation for the card shadow
+                    .padding(vertical = 16.dp),
+                elevation = CardDefaults.cardElevation(8.dp) // Adjust elevation for the card shadow
             ) {
                 LazyColumn {
                     item {
-                        Text("Aktuell", style = MaterialTheme.typography.h6)
+                        Text("Aktuell", style = MaterialTheme.typography.headlineSmall)
                         IconButton(
                             onClick = {
                                 currentList =
@@ -71,7 +77,7 @@ fun App() {
                         ) {
                             Text(
                                 text = currentList[index],
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.weight(1f)
                             )
@@ -81,7 +87,7 @@ fun App() {
                     item {
                         Text(
                             text = if (isExpanded) "Listtitle: Vergangene" else "Listtitle: Vergangene (Expandable)",
-                            style = MaterialTheme.typography.h6,
+                            style = MaterialTheme.typography.headlineSmall,
                             modifier = Modifier.clickable { isExpanded = !isExpanded }
                         )
                     }
@@ -97,7 +103,7 @@ fun App() {
                             ) {
                                 Text(
                                     text = pastList[index],
-                                    style = MaterialTheme.typography.subtitle1
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
                         }
