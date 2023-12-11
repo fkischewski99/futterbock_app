@@ -4,6 +4,8 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+
+
 kotlin {
     androidTarget()
 
@@ -39,6 +41,7 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
+                implementation("org.jetbrains.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
             }
         }
@@ -54,6 +57,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
+                implementation("org.jetbrains.compose.ui:ui-tooling-preview")
             }
         }
     }
@@ -77,4 +81,13 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+    java {
+        sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
+        targetCompatibility  = org.gradle.api.JavaVersion.VERSION_17
+    }
+}
+dependencies {
+    implementation("androidx.compose.ui:ui-tooling-preview-android:1.5.4")
+    implementation("androidx.compose.ui:ui-tooling-preview-desktop:1.6.0-beta02")
+    implementation("androidx.core:core-ktx:+")
 }

@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import view.homescreen.EventOverview
+import view.new_event.NewEventPage
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -35,82 +37,10 @@ fun App() {
         var pastList by remember { mutableStateOf(listOf("Past Item 1", "Past Item 2")) }
         var isExpanded by remember { mutableStateOf(false) }
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Lagerübersicht 123") },
-                )
-            }
-        ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                elevation = CardDefaults.cardElevation(8.dp) // Adjust elevation for the card shadow
-            ) {
-                LazyColumn {
-                    item {
-                        Text("Aktuell", style = MaterialTheme.typography.headlineSmall)
-                        IconButton(
-                            onClick = {
-                                currentList =
-                                    currentList + "Neues Lager" // Adding new item to the current list
-                            },
-                            modifier = Modifier.padding(start = 8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add"
-                            )
-                        }
-
-                    }
-                    items(currentList.size) { index ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    // Action on clicking an item in the current list
-                                }
-                                .padding(vertical = 8.dp, horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = currentList[index],
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-
-                    item {
-                        Text(
-                            text = if (isExpanded) "Listtitle: Vergangene" else "Listtitle: Vergangene (Expandable)",
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.clickable { isExpanded = !isExpanded }
-                        )
-                    }
-                    if (isExpanded) {
-                        items(pastList.size) { index ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        // Action on clicking an item in the past list
-                                    }
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = pastList[index],
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+        AppTheme {
+            NewEventPage();
         }
+
     }
 }
 
