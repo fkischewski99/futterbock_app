@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,8 +72,7 @@ fun NewEventPage() {
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "Neues Lager Erstellen",
@@ -80,21 +80,19 @@ fun NewEventPage() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                OutlinedTextField(
-                    value = name.text,
-                    onValueChange = { name = TextFieldValue(it) },
-                    label = { Text("Name:") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier.padding(vertical = 10.dp, horizontal = 0.dp),
                     verticalArrangement = Arrangement.Top,
-                    //horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.Start
                 ) {
+
+                    OutlinedTextField(value = name.text,
+                        onValueChange = { name = TextFieldValue(it) },
+                        label = { Text("Name:") },
+                        modifier = Modifier.padding(8.dp)
+                    )
                     SimpleDateRangePickerInDatePickerDialog(
-                        openDialog = false,
-                        onDismiss = {}
+
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Column(
@@ -102,11 +100,8 @@ fun NewEventPage() {
                             .padding(top = 8.dp)
                     ) {
                         mealsGroupedByDate.forEach { it ->
-                            CardWithList(
-                                "" + it.key.dayOfMonth + "." + it.key.month,
-                                it.value
-                                    .map { meal -> meal.toListItem() }
-                            )
+                            CardWithList("" + it.key.dayOfMonth + "." + it.key.month,
+                                it.value.map { meal -> meal.toListItem() })
                         }
                     }
 
