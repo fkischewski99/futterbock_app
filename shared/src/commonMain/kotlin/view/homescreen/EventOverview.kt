@@ -9,14 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import model.Event
 import model.toListItem
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventOverview() {
     MaterialTheme {
-        val event = Event( LocalDate.of(2023, 12, 1),  LocalDate.of(2023, 12, 5), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
-        val pastEvent = Event( LocalDate.of(2023, 12, 8),  LocalDate.of(2023, 12, 10), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
+        val event = Event( LocalDate.parse("2023-12-01"),  LocalDate.parse("2023-12-05"), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
+        val pastEvent = Event( LocalDate.parse("2023-12-08"),  LocalDate.parse("2023-12-10"), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
         var currentList by remember { mutableStateOf(listOf(event.toListItem())) }
         var pastList by remember { mutableStateOf(listOf(pastEvent.toListItem())) }
 

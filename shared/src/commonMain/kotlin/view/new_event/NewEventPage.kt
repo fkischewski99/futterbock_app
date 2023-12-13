@@ -1,7 +1,11 @@
 package view.new_event
 
 import AppTheme
+import CardWithList
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -10,36 +14,53 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.Instant
 import model.Meal
 import model.RecipeSelection
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import model.toListItem
+import kotlin.time.Duration.Companion.days
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewEventPage() {
     var name by remember { mutableStateOf(TextFieldValue()) }
-    var startDate by remember { mutableStateOf(TextFieldValue()) }
+    val dateRangePickerState = rememberDateRangePickerState(
+        initialSelectedStartDateMillis = Clock.System.now().toEpochMilliseconds(),
+        initialSelectedEndDateMillis = Clock.System.now().plus(4.days).toEpochMilliseconds(),
+        yearRange = IntRange(2023, 2100),
+        initialDisplayMode = DisplayMode.Picker
+    )
+
     var endDate by remember { mutableStateOf(TextFieldValue()) }
-    var meal = Meal(LocalDate.of(2023, 12, 1), "Mittag", listOf(RecipeSelection("ab", ArrayList(), "Rezept 1")))
-    var meal2 = Meal(LocalDate.of(2023, 12, 2), "Abend", listOf(RecipeSelection("ab", ArrayList(), "Rezept 1")))
+    var meal = Meal(
+        LocalDate.parse("2023-12-01"),
+        "Mittag",
+        listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
+    )
+    var meal2 = Meal(
+        LocalDate.parse("2023-12-03"),
+        "Abend",
+        listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
+    )
     var meals = listOf(meal, meal2);
 
 
-    val startDate2 = LocalDate.of(2023, 12, 1)
-    val endDate2 = LocalDate.of(2023, 12, 10)
-    val daysBetween = ChronoUnit.DAYS.between(startDate2, endDate2)
+    val startDate2 = LocalDate.parse("2023-12-01")
+    val endDate2 = LocalDate.parse("2023-12-06")
+    val daysBetween = endDate2.minus(startDate2).days
     val mealsGroupedByDate = mutableMapOf<LocalDate, MutableList<Meal>>()
 
+
     for (i in 0..daysBetween) {
-
-        // Replace this logic with your way of generating meals for a specific day
-        val generatedMeals = meals.filter { meal -> meal.day == startDate2 }
-        if(generatedMeals != null){
-            //mealsGroupedByDate[startDate2].addAll(generatedMeals)
-        }
-
+        val currentDate = startDate2.plus(DatePeriod(0, 0, i))
+        val mealsForCurrentDate = meals.filter { it.day == currentDate }.toMutableList()
+        mealsGroupedByDate[currentDate] = mealsForCurrentDate
     }
 
 
@@ -50,7 +71,8 @@ fun NewEventPage() {
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
             ) {
                 Text(
                     text = "Neues Lager Erstellen",
@@ -65,28 +87,34 @@ fun NewEventPage() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Column {
-                    OutlinedTextField(
-                        value = startDate.text,
-                        onValueChange = { startDate = TextFieldValue(it) },
-                        label = { Text("Start:") },
-                        modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 0.dp),
+                    verticalArrangement = Arrangement.Top,
+                    //horizontalAlignment = Alignment.End
+                ) {
+                    SimpleDateRangePickerInDatePickerDialog(
+                        openDialog = false,
+                        onDismiss = {}
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                            .padding(top = 8.dp)
+                    ) {
+                        mealsGroupedByDate.forEach { it ->
+                            CardWithList(
+                                "" + it.key.dayOfMonth + "." + it.key.month,
+                                it.value
+                                    .map { meal -> meal.toListItem() }
+                            )
+                        }
+                    }
+
+
+                    // Rest of the code remains the same...
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = endDate.text,
-                    onValueChange = { endDate = TextFieldValue(it) },
-                    label = { Text("Ende:") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Column {
-
-                }
-
-
-                // Rest of the code remains the same...
             }
+
         }
     }
 }

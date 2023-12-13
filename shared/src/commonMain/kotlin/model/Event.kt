@@ -1,7 +1,7 @@
 package model
 
 import view.shared.ListItem
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 data class Event(
     val from: LocalDate,
     val to: LocalDate,

@@ -1,7 +1,7 @@
 package model
 
 import view.shared.ListItem
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 data class Meal(
     val day: LocalDate,
@@ -9,13 +9,23 @@ data class Meal(
     val recipeSelections: List<RecipeSelection>
 )
 
-// Extension function to map Meal to ListItem
-fun Meal.getListItems(): List<ListItem> {
-    val recipeSelectionItems = recipeSelections.map { recipeSelection ->
-        recipeSelection.toListItem()
+fun Meal.toListItem(): ListItem {
+    return object : ListItem {
+        override fun getTitle(): String {
+            return mealType // Custom title using 'meal_type' and 'day'
+        }
+
+        override fun getSubtitle(): String {
+            // Custom subtitle logic based on 'recipe_selections' or any other properties
+            return recipeSelections.joinToString(", ") { it.recipe }
+        }
+
+        override fun onClick(): String {
+            return "Clicked meal on ListItem" // Example: Generating onClick behavior
+        }
     }
-    return recipeSelectionItems
-
-
 }
+
+
+// Extension function to map Meal to ListItem
 

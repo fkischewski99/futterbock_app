@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import view.shared.ListItem
 
 @Composable
-fun CardWithList(title: String, listItems : List<ListItem>) {
-    ElevatedCard (
+fun CardWithList(title: String, listItems: List<ListItem>) {
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -31,8 +31,8 @@ fun CardWithList(title: String, listItems : List<ListItem>) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn {
-                items(items = listItems) { listItem ->
+            Column {
+                listItems.forEach { listItem ->
                     ListItemComponent(listItem = listItem)
                 }
             }

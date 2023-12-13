@@ -30,6 +30,7 @@ kotlin {
                 implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
                 // Android Studio Preview support
                 //implementation("androidx.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
