@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import view.homescreen.EventOverview
 import view.new_event.NewEventPage
+import view.recepie_overview_screen.RecepieScreen
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +39,7 @@ fun App() {
         var isExpanded by remember { mutableStateOf(false) }
 
         AppTheme {
-            NewEventPage();
+            RecepieScreen()
         }
 
     }

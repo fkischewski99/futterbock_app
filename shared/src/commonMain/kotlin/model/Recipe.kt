@@ -1,6 +1,7 @@
 package model
 
 data class Recipe(
+    val name: String,
     val cookingInstructions: List<String>,
     val description: String,
     val dietaryHabits: String,

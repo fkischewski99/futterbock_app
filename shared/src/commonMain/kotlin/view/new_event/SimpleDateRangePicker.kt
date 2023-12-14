@@ -42,7 +42,7 @@ import kotlin.time.Duration.Companion.days
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SimpleDateRangePickerInDatePickerDialog() {
+fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long, selectedEndMilis: Long) -> Unit)) {
     var showDatePicker by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState(
         initialSelectedStartDateMillis = Clock.System.now().toEpochMilliseconds(),
@@ -50,13 +50,14 @@ fun SimpleDateRangePickerInDatePickerDialog() {
         yearRange = IntRange(2023, 2100),
         initialDisplayMode = DisplayMode.Picker
     )
+    //onSelect(dateRangePickerState.selectedStartDateMillis!!, dateRangePickerState.selectedEndDateMillis!!);
     Row(
-        modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         OutlinedTextField(
-            value = "" + dateRangePickerState.selectedEndDateMillis?.let {
+            value = "" + dateRangePickerState.selectedStartDateMillis?.let {
                 Instant.fromEpochMilliseconds(
                     it
                 )
@@ -104,6 +105,14 @@ fun SimpleDateRangePickerInDatePickerDialog() {
             confirmButton = {
                 TextButton(onClick = {
                     showDatePicker = false
+                    //Call function only if correct dates are selected
+                    if (dateRangePickerState.selectedStartDateMillis != null && dateRangePickerState.selectedEndDateMillis != null) {
+                        onSelect(
+                            dateRangePickerState.selectedStartDateMillis!!,
+                            dateRangePickerState.selectedEndDateMillis!!
+                        )
+                    }
+
                     //selectedDate = datePickerState.selectedDateMillis!!
                 }) {
                     Text(text = "Bestätigen")
