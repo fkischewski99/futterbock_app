@@ -17,7 +17,7 @@ fun RecepieScreen() {
         ),
         materials = listOf("Backform", "Schneebesen"),
         pageInCookbook = 10,
-        price = "5.99 EUR",
+        price = "5.99",
         season = "Herbst",
         source = "Omas Kochbuch",
         time = "1 Stunde",

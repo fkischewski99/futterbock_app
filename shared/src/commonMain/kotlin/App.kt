@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import view.homescreen.EventOverview
 import view.new_event.NewEventPage
+import view.new_meal_screenimport.NewMealPage
 import view.recepie_overview_screen.RecepieScreen
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
@@ -38,8 +39,10 @@ fun App() {
         var pastList by remember { mutableStateOf(listOf("Past Item 1", "Past Item 2")) }
         var isExpanded by remember { mutableStateOf(false) }
 
-        AppTheme {
-            RecepieScreen()
+        AppTheme{
+            //RecepieScreen()
+            //NewEventPage()
+            NewMealPage { {} }
         }
 
     }

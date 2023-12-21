@@ -48,10 +48,10 @@ fun CardWithList(title: String, listItems: List<ListItem>, addItemToList: (() ->
                 modifier = Modifier.fillMaxWidth()
             ) {
                 addItemToList?.let {
-                    IconButton(
+                    FloatingActionButton(
                         onClick = { addItemToList.invoke() },
-                        modifier = Modifier.clip(shape = RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.clip(shape = RoundedCornerShape(50)),
+                        containerColor = MaterialTheme.colorScheme.onPrimary
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add, contentDescription = "Add Icon"
