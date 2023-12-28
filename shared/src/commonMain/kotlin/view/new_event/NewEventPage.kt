@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -39,11 +40,11 @@ import view.new_meal_screen.NewMealScreen
 import kotlin.time.Duration.Companion.days
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun NewEventPage(event: Event) {
     val navigator = LocalNavigator.currentOrThrow
-    var name by remember { mutableStateOf(TextFieldValue()) }
+    var name by remember { mutableStateOf(TextFieldValue(event.name)) }
     var mealsGroupedByDate by remember {
         mutableStateOf<Map<LocalDate, MutableList<Meal>>>(mutableMapOf())
     }
@@ -74,7 +75,7 @@ fun NewEventPage(event: Event) {
     }
 
     val navigateToNewListItem: () -> Unit = {
-        navigator.push(NewMealScreen())
+        navigator.push(NewMealScreen(event.participantsSchedule))
     }
 
     val onDateSelectFunction: (selectedStartMilis: Long, selectedEndMilis: Long) -> Unit =
@@ -94,14 +95,14 @@ fun NewEventPage(event: Event) {
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())
+                modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()).fillMaxWidth()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Neues Lager Erstellen",
+                        text = "Lager bearbeiten",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp).weight(1f),
@@ -132,13 +133,40 @@ fun NewEventPage(event: Event) {
                     }
                 }
 
-                Row() {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     OutlinedTextField(
                         value = name.text,
                         onValueChange = { name = TextFieldValue(it) },
                         label = { Text("Name:") },
                         modifier = Modifier.padding(8.dp)
                     )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = "" + event.participantsSchedule.size,
+                        readOnly = true,
+                        onValueChange = { },
+                        label = { Text("Teilnehmeranzahl:") },
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Button(
+                        // Calendar icon to open DatePicker
+                        onClick = {
+                            //TODO Navigate to Teilnehmerliste
+                        },
+                        modifier = Modifier
+                            .padding(8.dp).height(IntrinsicSize.Min).align(Alignment.CenterVertically),
+
+                        ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Person",
+                        )
+                    }
                 }
                 SimpleDateRangePickerInDatePickerDialog(
                     onDateSelectFunction
@@ -147,7 +175,7 @@ fun NewEventPage(event: Event) {
                 mealsGroupedByDate.forEach { it ->
                     CardWithList(
                         "" + it.key.dayOfMonth + "." + it.key.month,
-                        it.value.map { meal -> meal.toListItem() }, navigateToNewListItem
+                        it.value.map { meal -> meal.toListItem() }.toMutableList(), navigateToNewListItem
                     )
                 }
 

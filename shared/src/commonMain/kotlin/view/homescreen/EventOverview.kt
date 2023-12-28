@@ -13,16 +13,44 @@ import model.Event
 import model.toListItem
 import kotlinx.datetime.LocalDate
 import view.new_event.NewEventScreen
+import view.shared.ListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventOverview() {
     MaterialTheme {
-        val event = Event( "id", LocalDate.parse("2023-12-01"),  LocalDate.parse("2023-12-05"), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
-        val pastEvent = Event( "id", LocalDate.parse("2023-12-08"),  LocalDate.parse("2023-12-10"), "stammeslager", "ab", "yoyo", ArrayList(), "ab", ArrayList());
-        var currentList by remember { mutableStateOf(listOf(event.toListItem())) }
-        var pastList by remember { mutableStateOf(listOf(pastEvent.toListItem())) }
+        val event = Event(
+            "id",
+            LocalDate.parse("2023-12-01"),
+            LocalDate.parse("2023-12-05"),
+            "stammeslager",
+            "ab",
+            "yoyo",
+            ArrayList(),
+            "ab",
+            ArrayList()
+        );
+        val pastEvent = Event(
+            "id",
+            LocalDate.parse("2023-12-08"),
+            LocalDate.parse("2023-12-10"),
+            "stammeslager",
+            "ab",
+            "yoyo",
+            ArrayList(),
+            "ab",
+            ArrayList()
+        );
+
+        // Create a mutable state for the list
+        var currentList by mutableStateOf(mutableStateListOf(event.toListItem()))
+        var pastList by mutableStateOf(listOf(pastEvent.toListItem()))
         val navigator = LocalNavigator.currentOrThrow
+
+        fun deleteItemFromCurrentList(item: ListItem){
+            //TODO actually remove item
+            currentList.remove(item);
+        }
 
 
         Scaffold(
@@ -32,16 +60,22 @@ fun EventOverview() {
                 )
             }
         ) {
-            Column (
+            Column(
                 modifier = Modifier.padding(top = 45.dp)
-            ){
+            ) {
                 // Your screen content
 
-                CardWithList("Aktuelle Lager", currentList, addItemToList = {navigator.push(NewEventScreen(null))})
-                CardWithList("Vergangene Lager", pastList,)
+                CardWithList(
+                    "Aktuelle Lager",
+                    currentList,
+                    addItemToList = { navigator.push(NewEventScreen(null)) },
+                    onDeleteClick = {deleteItemFromCurrentList(it)}
+                )
+                CardWithList("Vergangene Lager", pastList)
             }
         }
     }
+
 
 
 }

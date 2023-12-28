@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,61 +22,78 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import view.shared.ListItem
 
 @Composable
-fun CardWithList(title: String, listItems: List<ListItem>, addItemToList: (() -> Unit)? = null) {
+fun CardWithList(
+    title: String,
+    listItems: List<ListItem>,
+    addItemToList: (() -> Unit)? = null,
+    onDeleteClick: ((ListItem) -> Unit)? = null
+) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = title,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
 
-            listItems.forEach { listItem ->
-                ListItemComponent(listItem = listItem)
-            }
-            if(listItems.isEmpty()){
-                Spacer(Modifier.height(16.dp))
-            }
+        listItems.forEach { listItem ->
+            ListItemComponent(listItem = listItem, onDeleteClick = onDeleteClick)
+        }
+        if (listItems.isEmpty()) {
+            Spacer(Modifier.height(16.dp))
+        }
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                addItemToList?.let {
-                    FloatingActionButton(
-                        onClick = { addItemToList.invoke() },
-                        modifier = Modifier.clip(shape = RoundedCornerShape(50)),
-                        containerColor = MaterialTheme.colorScheme.onPrimary
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add, contentDescription = "Add Icon"
-                        )
-                    }
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            addItemToList?.let {
+                FloatingActionButton(
+                    onClick = { addItemToList.invoke() },
+                    modifier = Modifier.clip(shape = RoundedCornerShape(50)),
+                    containerColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add, contentDescription = "Add Icon"
+                    )
                 }
             }
-
-
         }
     }
 }
 
 @Composable
-fun ListItemComponent(listItem: ListItem) {
+fun ListItemComponent(listItem: ListItem, onDeleteClick: ((ListItem) -> Unit)? = null) {
     val navigator = LocalNavigator.currentOrThrow
 
-    Column(modifier = Modifier.fillMaxWidth().clickable {
+    Row(modifier = Modifier.fillMaxWidth().clickable {
         navigator.push(listItem.navigateTo())
     }.padding(16.dp)) {
-        Text(text = listItem.getTitle(), color = Color.Black)
-        Text(text = listItem.getSubtitle(), color = Color.Gray)
+        Column {
+            Text(text = listItem.getTitle(), color = Color.Black)
+            Text(text = listItem.getSubtitle(), color = Color.Gray)
+        }
+        if (
+            onDeleteClick != null
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = { onDeleteClick(listItem) },
+                modifier = Modifier.padding(end = 8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Item",
+                    tint = Color.Red
+                )
+            }
+        }
     }
 }

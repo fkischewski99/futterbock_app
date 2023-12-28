@@ -1,4 +1,4 @@
-package view.new_meal_screenimport
+package view.new_meal_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,11 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import model.Participant
 import view.recepie_overview_screen.RecepieScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewMealPage(onSearch: (String) -> Unit) {
+fun NewMealPage(participants: List<Participant>) {
     val navigator = LocalNavigator.currentOrThrow
     var searchText by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
@@ -141,7 +142,7 @@ fun NewMealPage(onSearch: (String) -> Unit) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Replace this with your recipe content
-                    RecipeWithMembers()
+                    RecipeWithMembers(participants)
                 }
             }
         }
@@ -149,8 +150,8 @@ fun NewMealPage(onSearch: (String) -> Unit) {
 }
 
 @Composable
-fun RecipeWithMembers() {
-    val members = listOf("Frederik K", "Ronja W", "Young Flex", "Old Flex") // Example members
+fun RecipeWithMembers(participants: List<Participant>) {
+    val members = participants.map { it.firstName + " " + it.lastName } // Example members
     val checkedState = remember {
         mutableStateMapOf<String, Boolean>().apply {
             members.forEach { member ->
