@@ -1,5 +1,6 @@
 package model
 
+import cafe.adriel.voyager.core.screen.Screen
 import view.shared.ListItem
 import kotlinx.datetime.LocalDate
 
@@ -20,8 +21,8 @@ fun Meal.toListItem(): ListItem {
             return recipeSelections.joinToString(", ") { it.recipe }
         }
 
-        override fun onClick(): String {
-            return "Clicked meal on ListItem" // Example: Generating onClick behavior
+        override fun navigateTo(): Screen {
+            TODO("Not yet implemented")
         }
     }
 }

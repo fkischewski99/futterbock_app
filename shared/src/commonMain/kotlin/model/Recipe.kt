@@ -5,7 +5,7 @@ data class Recipe(
     val cookingInstructions: List<String>,
     val description: String,
     val dietaryHabits: String,
-    val ingredients: List<IngredientAmount>,
+    val ingredients: List<Ingredient>,
     val materials: List<String>,
     val pageInCookbook: Int,
     val price: String,

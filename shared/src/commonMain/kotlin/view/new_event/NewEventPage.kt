@@ -21,6 +21,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
@@ -30,14 +32,17 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import model.Event
 import model.toListItem
 import org.jetbrains.compose.resources.painterResource
+import view.new_meal_screen.NewMealScreen
 import kotlin.time.Duration.Companion.days
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEventPage() {
+fun NewEventPage(event: Event) {
+    val navigator = LocalNavigator.currentOrThrow
     var name by remember { mutableStateOf(TextFieldValue()) }
     var mealsGroupedByDate by remember {
         mutableStateOf<Map<LocalDate, MutableList<Meal>>>(mutableMapOf())
@@ -45,38 +50,40 @@ fun NewEventPage() {
 
 
     //TODO remove test DATA
-    var meal = Meal(
-        LocalDate.parse("2023-12-01"),
-        "Mittag",
-        listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
-    )
-    var meal2 = Meal(
-        LocalDate.parse("2023-12-03"),
-        "Abend",
-        listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
-    )
-    var meals = listOf(meal, meal2);
+
+
     //End of Test Data
+    fun groupMealsByDate(){
+        if(event.from == null || event.to == null){
+            return;
+        }
+        val updatedMap = mutableMapOf<LocalDate, MutableList<Meal>>();
+        val daysBetween = (event.to!! - event.from!!).days
+        for (i in 0..daysBetween) {
+            val currentDate = event.from!!.plus(DatePeriod(years = 0, months = 0, days = i))
+            val mealsForCurrentDate = event.meals.filter { it.day == currentDate }.toMutableList()
+            updatedMap[currentDate] = mealsForCurrentDate
+        }
+        mealsGroupedByDate = updatedMap.toMap();
+    }
+
+    LaunchedEffect(Unit){
+        if(event.to != null && event.from != null){
+            groupMealsByDate();
+        }
+    }
 
     val navigateToNewListItem: () -> Unit = {
-        //Todo add navigation
+        navigator.push(NewMealScreen())
     }
 
     val onDateSelectFunction: (selectedStartMilis: Long, selectedEndMilis: Long) -> Unit =
         { startMillis, endMillis ->
-            val updatedMap = mutableMapOf<LocalDate, MutableList<Meal>>();
             val startDateSelect = Instant.fromEpochMilliseconds(startMillis)
             val endDateSelect = Instant.fromEpochMilliseconds(endMillis)
-            val daysBetween = endDateSelect.minus(startDateSelect).inWholeDays;
-            for (i in 0..daysBetween) {
-                val currentInstant = startDateSelect.plus(i.days)
-                val currentDate =
-                    currentInstant.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
-                val mealsForCurrentDate = meals.filter { it.day == currentDate }.toMutableList()
-                updatedMap[currentDate] = mealsForCurrentDate
-            }
-            mealsGroupedByDate = updatedMap.toMap();
-
+            event.from = startDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+            event.to = endDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+            groupMealsByDate();
         }
 
 
@@ -152,6 +159,4 @@ fun NewEventPage() {
     }
 }
 
-fun calculateDaysInBeetween() {
 
-}

@@ -2,6 +2,8 @@ package view.new_event
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,7 +43,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration.Companion.days
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long, selectedEndMilis: Long) -> Unit)) {
     var showDatePicker by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState(
@@ -51,11 +53,9 @@ fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long
         initialDisplayMode = DisplayMode.Picker
     )
     //onSelect(dateRangePickerState.selectedStartDateMillis!!, dateRangePickerState.selectedEndDateMillis!!);
-    Row(
+    FlowRow (
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
     ) {
-
         OutlinedTextField(
             value = "" + dateRangePickerState.selectedStartDateMillis?.let {
                 Instant.fromEpochMilliseconds(

@@ -25,6 +25,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                val voyagerVersion = "1.0.0";
+
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
@@ -32,6 +34,9 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
                 implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+
+                implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+                implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
                 // Android Studio Preview support
                 //implementation("androidx.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
@@ -43,7 +48,7 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
-                implementation("org.jetbrains.compose.ui:ui-tooling-preview")
+                //implementation("org.jetbrains.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
             }
         }
@@ -87,9 +92,4 @@ android {
         sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
         targetCompatibility  = org.gradle.api.JavaVersion.VERSION_17
     }
-}
-dependencies {
-    implementation("androidx.compose.ui:ui-tooling-preview-android:1.5.4")
-    implementation("androidx.compose.ui:ui-tooling-preview-desktop:1.6.0-beta02")
-    implementation("androidx.core:core-ktx:+")
 }

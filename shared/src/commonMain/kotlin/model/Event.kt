@@ -1,16 +1,20 @@
 package model
 
+import cafe.adriel.voyager.core.screen.Screen
 import view.shared.ListItem
 import kotlinx.datetime.LocalDate
+import view.new_event.NewEventScreen
+
 data class Event(
-    val from: LocalDate,
-    val to: LocalDate,
+    val id: String,
+    var from: LocalDate?,
+    var to: LocalDate?,
     val eventType: String,
     val group: String,
     val kitchenSchedule: String,
-    val meals: List<String>,
+    val meals: List<Meal>,
     val name: String,
-    val participantsSchedule: List<ParticipantsSchedule>
+    val participantsSchedule: List<Participant>
 )
 
 // Extension function to map Event to ListItem
@@ -24,8 +28,8 @@ fun Event.toListItem(): ListItem {
             return this@toListItem.from.toString() + " - " +  this@toListItem.to.toString()
         }
 
-        override fun onClick(): String {
-            return "Clicked ${this@toListItem.name}" // Example: Generating onClick behavior
+        override fun navigateTo(): Screen {
+            return NewEventScreen(this@toListItem.id);
         }
     }
 }

@@ -77,12 +77,12 @@ fun RecipeOverview(recipe: Recipe) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = ingredientAmount.amount,
+                            text = "" + ingredientAmount.amount + ingredientAmount.scoutUnit,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 8.dp).width(100.dp)
                         )
                         Text(
-                            text = ingredientAmount.ingredientId,
+                            text = ingredientAmount.name,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }

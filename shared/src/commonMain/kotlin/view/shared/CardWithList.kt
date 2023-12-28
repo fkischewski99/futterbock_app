@@ -15,6 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import view.shared.ListItem
 
 @Composable
@@ -67,7 +70,11 @@ fun CardWithList(title: String, listItems: List<ListItem>, addItemToList: (() ->
 
 @Composable
 fun ListItemComponent(listItem: ListItem) {
-    Column(modifier = Modifier.fillMaxWidth().clickable { listItem.onClick() }.padding(16.dp)) {
+    val navigator = LocalNavigator.currentOrThrow
+
+    Column(modifier = Modifier.fillMaxWidth().clickable {
+        navigator.push(listItem.navigateTo())
+    }.padding(16.dp)) {
         Text(text = listItem.getTitle(), color = Color.Black)
         Text(text = listItem.getSubtitle(), color = Color.Gray)
     }

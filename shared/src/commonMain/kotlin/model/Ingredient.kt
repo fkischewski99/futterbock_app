@@ -5,5 +5,6 @@ data class Ingredient(
     val conversionFactor: Double,
     val scoutUnit: String,
     val metricUnit: String,
-    val name: String
+    val name: String,
+    val amount: Int,
 )
