@@ -4,6 +4,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import view.shared.ListItem
 import kotlinx.datetime.LocalDate
 import view.new_event.NewEventScreen
+import view.shared.HelperFunctions
 
 data class Event(
     val id: String,
@@ -18,18 +19,24 @@ data class Event(
 )
 
 // Extension function to map Event to ListItem
-fun Event.toListItem(): ListItem {
-    return object : ListItem {
+fun Event.toListItem(): ListItem<Event> {
+    return object : ListItem<Event> {
         override fun getTitle(): String {
             return this@toListItem.name // Example: Mapping 'name' property to getTitle()
         }
 
         override fun getSubtitle(): String {
-            return this@toListItem.from.toString() + " - " +  this@toListItem.to.toString()
+            if(from == null || to == null)
+                return ""
+            return HelperFunctions.formatDate(this@toListItem.from!!) + " - " +  HelperFunctions.formatDate(this@toListItem.to!!)
         }
 
         override fun navigateTo(): Screen {
             return NewEventScreen(this@toListItem.id);
+        }
+
+        override fun getItem(): Event {
+            return this@toListItem
         }
     }
 }

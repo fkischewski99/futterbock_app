@@ -47,7 +47,7 @@ fun EventOverview() {
         var pastList by mutableStateOf(listOf(pastEvent.toListItem()))
         val navigator = LocalNavigator.currentOrThrow
 
-        fun deleteItemFromCurrentList(item: ListItem){
+        fun deleteItemFromCurrentList(item: ListItem<Event>){
             //TODO actually remove item
             currentList.remove(item);
         }

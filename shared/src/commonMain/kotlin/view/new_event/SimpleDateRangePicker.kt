@@ -31,32 +31,25 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toLocalDateTime
+import view.shared.DateRangePickerDialog
+import view.shared.HelperFunctions
 import kotlin.time.Duration.Companion.days
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long, selectedEndMilis: Long) -> Unit)) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val dateRangePickerState = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = Clock.System.now().toEpochMilliseconds(),
-        initialSelectedEndDateMillis = Clock.System.now().plus(4.days).toEpochMilliseconds(),
-        yearRange = IntRange(2023, 2100),
-        initialDisplayMode = DisplayMode.Picker
-    )
+    var dateStartMillis by remember { mutableStateOf(Clock.System.now().toEpochMilliseconds()) }
+    var dateEndMillis by remember { mutableStateOf(Clock.System.now().plus(4.days).toEpochMilliseconds()) }
 
-    fun formatDate(time: Long): String {
-        val date = Instant.fromEpochMilliseconds(time)
-            .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
-        return "" + date.dayOfMonth + "." + date.monthNumber + "." + date.year;
-    }
     //onSelect(dateRangePickerState.selectedStartDateMillis!!, dateRangePickerState.selectedEndDateMillis!!);
     FlowRow (
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
-            value = "" + dateRangePickerState.selectedStartDateMillis?.let {
-                formatDate(it)
+            value = "" + dateStartMillis?.let {
+                HelperFunctions.formatLongDate(it)
             },
             label = { Text("Start:") },
             onValueChange = { },
@@ -66,8 +59,8 @@ fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long
                 .padding(8.dp).height(IntrinsicSize.Min)
         )
         OutlinedTextField(
-            value = "" + dateRangePickerState.selectedEndDateMillis?.let {
-                formatDate(it)
+            value = "" + dateEndMillis.let {
+                HelperFunctions.formatLongDate(it)
             },
             label = { Text("Ende:") },
             onValueChange = { },
@@ -79,7 +72,7 @@ fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long
         Button(
             // Calendar icon to open DatePicker
             onClick = {
-                showDatePicker = true
+                showDatePicker = true;
             },
             modifier = Modifier
                 .padding(8.dp).height(IntrinsicSize.Min).align(Alignment.CenterVertically),
@@ -92,32 +85,13 @@ fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long
         }
     }
     if (showDatePicker) {
-        DatePickerDialog(
-            shape = RoundedCornerShape(6.dp),
-            onDismissRequest = {},
-            confirmButton = {
-                TextButton(onClick = {
-                    showDatePicker = false
-                    //Call function only if correct dates are selected
-                    if (dateRangePickerState.selectedStartDateMillis != null && dateRangePickerState.selectedEndDateMillis != null) {
-                        onSelect(
-                            dateRangePickerState.selectedStartDateMillis!!,
-                            dateRangePickerState.selectedEndDateMillis!!
-                        )
-                    }
-
-                    //selectedDate = datePickerState.selectedDateMillis!!
-                }) {
-                    Text(text = "Bestätigen")
-                }
-            },
-        ) {
-
-            DateRangePicker(
-                modifier = Modifier.weight(1f), // Important to display the button
-                state = dateRangePickerState,
-            )
-
-        }
+        DateRangePickerDialog(
+            onSelect = { startMillis, endMillis ->
+                onSelect(startMillis, endMillis)
+                dateStartMillis = startMillis
+                dateEndMillis = endMillis
+                showDatePicker = false // Set value to false after onSelect is executed
+            }
+        )
     }
 }

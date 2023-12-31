@@ -22,11 +22,12 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import view.shared.ListItem
 
 @Composable
-fun CardWithList(
+fun <T> CardWithList(
     title: String,
-    listItems: List<ListItem>,
+    listItems: List<ListItem<T>>,
     addItemToList: (() -> Unit)? = null,
-    onDeleteClick: ((ListItem) -> Unit)? = null
+    onDeleteClick: ((ListItem<T>) -> Unit)? = null,
+    onListItemClick: ((ListItem<T>) -> Unit)? = null
 ) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -44,7 +45,7 @@ fun CardWithList(
         }
 
         listItems.forEach { listItem ->
-            ListItemComponent(listItem = listItem, onDeleteClick = onDeleteClick)
+            ListItemComponent(listItem = listItem, onDeleteClick = onDeleteClick, onListItemClick = onListItemClick)
         }
         if (listItems.isEmpty()) {
             Spacer(Modifier.height(16.dp))
@@ -70,11 +71,19 @@ fun CardWithList(
 }
 
 @Composable
-fun ListItemComponent(listItem: ListItem, onDeleteClick: ((ListItem) -> Unit)? = null) {
+fun <T> ListItemComponent(
+    listItem: ListItem<T>,
+    onDeleteClick: ((ListItem<T>) -> Unit)? = null,
+    onListItemClick: ((ListItem<T>) -> Unit)? = null
+) {
     val navigator = LocalNavigator.currentOrThrow
 
     Row(modifier = Modifier.fillMaxWidth().clickable {
-        navigator.push(listItem.navigateTo())
+        if (onListItemClick != null) {
+            onListItemClick(listItem)
+        } else {
+            navigator.push(listItem.navigateTo())
+        }
     }.padding(16.dp)) {
         Column {
             Text(text = listItem.getTitle(), color = Color.Black)

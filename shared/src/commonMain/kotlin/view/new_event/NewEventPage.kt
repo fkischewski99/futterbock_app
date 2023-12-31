@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -24,20 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import model.Meal
-import model.RecipeSelection
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import model.Event
 import model.toListItem
-import org.jetbrains.compose.resources.painterResource
 import view.new_meal_screen.NewMealScreen
-import kotlin.time.Duration.Companion.days
+import view.participants.ParticipantScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -156,7 +152,7 @@ fun NewEventPage(event: Event) {
                     Button(
                         // Calendar icon to open DatePicker
                         onClick = {
-                            //TODO Navigate to Teilnehmerliste
+                            navigator.push(ParticipantScreen(event))
                         },
                         modifier = Modifier
                             .padding(8.dp).height(IntrinsicSize.Min).align(Alignment.CenterVertically),

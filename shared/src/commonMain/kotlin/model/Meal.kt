@@ -10,8 +10,8 @@ data class Meal(
     val recipeSelections: List<RecipeSelection>
 )
 
-fun Meal.toListItem(): ListItem {
-    return object : ListItem {
+fun Meal.toListItem(): ListItem<Meal> {
+    return object : ListItem<Meal> {
         override fun getTitle(): String {
             return mealType // Custom title using 'meal_type' and 'day'
         }
@@ -23,6 +23,10 @@ fun Meal.toListItem(): ListItem {
 
         override fun navigateTo(): Screen {
             TODO("Not yet implemented")
+        }
+
+        override fun getItem(): Meal {
+            return this@toListItem
         }
     }
 }
