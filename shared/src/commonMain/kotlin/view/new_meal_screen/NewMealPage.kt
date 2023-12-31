@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.*
@@ -106,6 +107,7 @@ fun NewMealPage(participants: List<Participant>) {
                     ) {
                         Text(text = it)
                     }
+                    Divider()
                 }
             }
             //elevation = AppBarDefaults.TopAppBarElevation

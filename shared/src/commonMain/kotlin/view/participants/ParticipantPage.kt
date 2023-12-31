@@ -11,12 +11,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toLocalDateTime
 import model.Event
@@ -30,6 +31,7 @@ fun ParticipantPage(event: Event) {
     var currentList by mutableStateOf(event.participantsSchedule.map { it.toListItem() })
     var showDatePicker by remember { mutableStateOf(false) }
     var currentParticipant: Participant? = null;
+    val navigator = LocalNavigator.currentOrThrow
 
     fun setDatePickerActiveForItem(listItem: ListItem<Participant>) {
         showDatePicker = true;
@@ -48,13 +50,15 @@ fun ParticipantPage(event: Event) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
+
         Column(modifier = Modifier.padding(8.dp).verticalScroll(rememberScrollState())) {
             CardWithList(
                 title = "Teilnehmer",
                 listItems = currentList,
-                onListItemClick = { setDatePickerActiveForItem(it) }
+                onListItemClick = { setDatePickerActiveForItem(it) },
+                addItemToList = {navigator.push(ParticipantSearchBarScreen(event))}
 
             )
         }

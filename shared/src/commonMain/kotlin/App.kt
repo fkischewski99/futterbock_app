@@ -23,6 +23,7 @@ fun App() {
             //RecepieScreen()
             //NewEventPage()
             Navigator(HomeScreen()) {navigator -> SlideTransition(navigator) }
+            //Navigator(AddParticipantToEventScreen()) {navigator -> SlideTransition(navigator) }
         }
 
     }

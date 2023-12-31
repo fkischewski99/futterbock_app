@@ -2,7 +2,6 @@ package model
 
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.datetime.LocalDate
-import view.new_event.NewEventScreen
 import view.shared.HelperFunctions
 import view.shared.ListItem
 
@@ -12,8 +11,8 @@ class Participant(
     val eatingHabit: String,
     val firstName: String,
     val lastName: String,
-    var from: LocalDate,
-    var to: LocalDate
+    var from: LocalDate?,
+    var to: LocalDate?
 )
 
 fun Participant.toListItem(): ListItem<Participant> {
@@ -23,7 +22,7 @@ fun Participant.toListItem(): ListItem<Participant> {
         }
 
         override fun getSubtitle(): String {
-            return HelperFunctions.formatDate(this@toListItem.from) + " - " +  HelperFunctions.formatDate(this@toListItem.to)
+            return this@toListItem.from?.let {HelperFunctions.formatDate(it)} + " - " +  this@toListItem.to?.let {HelperFunctions.formatDate(it)}
         }
 
         override fun navigateTo(): Screen {
