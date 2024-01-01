@@ -6,8 +6,9 @@ import kotlinx.datetime.LocalDate
 import model.EatingHabit
 import model.Event
 import model.Meal
+import model.MealType
 import model.Participant
-import model.RecipeSelection
+import view.event.new_meal_screen.ExampleObjects
 
 class NewEventScreen(private val eventId: String?) : Screen {
 
@@ -19,13 +20,13 @@ class NewEventScreen(private val eventId: String?) : Screen {
     fun getEventById(eventId: String): Event {
         var meal = Meal(
             LocalDate.parse("2023-12-01"),
-            "Mittag",
-            listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
+            MealType.MITTAG,
+            ExampleObjects.getAllRecepies()
         )
         var meal2 = Meal(
             LocalDate.parse("2023-12-03"),
-            "Abend",
-            listOf(RecipeSelection("ab", ArrayList(), "Rezept 1"))
+            MealType.MITTAG,
+            ExampleObjects.getAllRecepies()
         )
         var meals = listOf(meal, meal2);
 

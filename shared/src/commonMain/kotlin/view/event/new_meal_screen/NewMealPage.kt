@@ -30,33 +30,29 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import model.Meal
 import model.Participant
+import model.Recipe
 import view.event.recepie_overview_screen.RecepieScreen
+import view.shared.NavigationIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewMealPage(participants: List<Participant>) {
+fun NewMealPage(meal: Meal, participants: List<Participant>) {
     val navigator = LocalNavigator.currentOrThrow
-    var searchText by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
     //var query by remember { mutableStateOf("") }
-    var recepieList = remember {
-        mutableStateListOf(
-            "Brot",
-            "Kuchen",
-            "Aldi",
-            "Lecker Essen",
-        )
-    }
-    var selectedRecepies = remember {
-        mutableStateListOf("Reis mit Scheiß")
-    }
+
+    var selectedRecepies =
+        mutableStateListOf(*meal.recipeSelections.toTypedArray())
+
 
     //val context = LocalContext.current
     Surface(
@@ -67,65 +63,13 @@ fun NewMealPage(participants: List<Participant>) {
     ) {
         Scaffold(
             topBar = {
-                SearchBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    query = searchText,
-                    placeholder = { Text(text = "Rezept auswählen") },
-                    onQueryChange = {
-                        searchText = it
-                    },
-                    onSearch = {
-                        active = false
-                    },
-                    active = active,
-                    onActiveChange = {
-                        active = it
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Suche")
-                    },
-                    trailingIcon = {
-                        if (active) {
-                            Icon(
-                                modifier = Modifier.clickable {
-                                    if (searchText.isEmpty()) {
-                                        active = false
-                                    } else {
-                                        searchText = ""
-                                    }
-
-                                },
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Close"
-                            )
-                        }
-                    }
-                ) {
-                    recepieList.filter {
-                        it.lowercase().contains(searchText.lowercase())
-                    }.forEach {
-                        Row(
-                            modifier = Modifier.padding(16.dp).clickable {
-                                active = false
-                                searchText = ""
-                                selectedRecepies.add(it)
-                            }
-
-                        ) {
-                            Text(text = it)
-                        }
-                        Divider()
-                    }
-                }
-                //elevation = AppBarDefaults.TopAppBarElevation
-
+                SearchBarComponent(selectedRecepies)
             }
         ) {
 
             Column(
-                modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())
+                modifier = Modifier.padding(top = it.calculateTopPadding()).verticalScroll(rememberScrollState())
             ) {
-                Spacer(modifier = Modifier.height(60.dp))
                 selectedRecepies.forEach {
                     ElevatedCard(
                         elevation = CardDefaults.cardElevation(8.dp),
@@ -142,7 +86,7 @@ fun NewMealPage(participants: List<Participant>) {
                                     navigator.push(RecepieScreen())
                                 })
                             Text(
-                                it,
+                                it.name,
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(8.dp),
                                 textAlign = TextAlign.Center
@@ -154,6 +98,73 @@ fun NewMealPage(participants: List<Participant>) {
                         RecipeWithMembers(participants)
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarComponent(selectedRecepies: SnapshotStateList<Recipe>) {
+    var searchText by remember { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
+    var recepieList = ExampleObjects.getAllRecepies().toTypedArray()
+
+    Row(
+        modifier = Modifier.padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (!active) {
+            NavigationIconButton()
+        }
+        SearchBar(
+            modifier = Modifier.fillMaxWidth(),
+            query = searchText,
+            placeholder = { Text(text = "Rezept auswählen") },
+            onQueryChange = {
+                searchText = it
+            },
+            onSearch = {
+                active = false
+            },
+            active = active,
+            onActiveChange = {
+                active = it
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Suche")
+            },
+            trailingIcon = {
+                if (active) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (searchText.isEmpty()) {
+                                active = false
+                            } else {
+                                searchText = ""
+                            }
+
+                        },
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close"
+                    )
+                }
+            }
+        ) {
+            recepieList.filter {
+                it.name.lowercase().contains(searchText.lowercase())
+            }.forEach {
+                Row(
+                    modifier = Modifier.padding(16.dp).clickable {
+                        active = false
+                        searchText = ""
+                        selectedRecepies.add(it)
+                    }
+
+                ) {
+                    Text(text = it.name)
+                }
+                Divider()
             }
         }
     }

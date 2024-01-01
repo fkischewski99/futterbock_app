@@ -22,7 +22,8 @@ class RecepieScreen: Screen {
         season = "Herbst",
         source = "Omas Kochbuch",
         time = "1 Stunde",
-        name = "Rezeptname"
+        name = "Rezeptname",
+        eaters = ArrayList()
     )
 
     @Composable

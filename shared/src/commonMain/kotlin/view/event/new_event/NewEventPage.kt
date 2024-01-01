@@ -31,9 +31,11 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import model.Event
+import model.MealType
 import model.toListItem
 import view.event.new_meal_screen.NewMealScreen
 import view.event.participants.ParticipantScreen
+import view.shared.NavigationIconButton
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -50,8 +52,8 @@ fun NewEventPage(event: Event) {
 
 
     //End of Test Data
-    fun groupMealsByDate(){
-        if(event.from == null || event.to == null){
+    fun groupMealsByDate() {
+        if (event.from == null || event.to == null) {
             return;
         }
         val updatedMap = mutableMapOf<LocalDate, MutableList<Meal>>();
@@ -64,123 +66,154 @@ fun NewEventPage(event: Event) {
         mealsGroupedByDate = updatedMap.toMap();
     }
 
-    LaunchedEffect(Unit){
-        if(event.to != null && event.from != null){
+    LaunchedEffect(Unit) {
+        if (event.to != null && event.from != null) {
             groupMealsByDate();
         }
     }
 
-    val navigateToNewListItem: () -> Unit = {
-        navigator.push(NewMealScreen(event.participantsSchedule))
+    fun navigateToNewListItem(date: LocalDate) {
+        navigator.push(
+            NewMealScreen(
+                Meal(
+                    day = date,
+                    recipeSelections = ArrayList(),
+                    mealType = MealType.MITTAG
+                ), event.participantsSchedule
+            )
+        )
+    }
+
+    fun navigateToMeal(meal: Meal) {
+        navigator.push(NewMealScreen(meal, event.participantsSchedule))
     }
 
     val onDateSelectFunction: (selectedStartMilis: Long, selectedEndMilis: Long) -> Unit =
         { startMillis, endMillis ->
             val startDateSelect = Instant.fromEpochMilliseconds(startMillis)
             val endDateSelect = Instant.fromEpochMilliseconds(endMillis)
-            event.from = startDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
-            event.to = endDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+            event.from =
+                startDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+            event.to =
+                endDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
             groupMealsByDate();
         }
 
 
     AppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()).fillMaxWidth()
+        Scaffold(
+            topBar = {
+                topBarEventPage()
+                }) {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.fillMaxSize().padding(top = it.calculateTopPadding())
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Lager bearbeiten",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp).weight(1f),
-
-
-                        )
-                    IconButton(
-                        onClick = { /* Handle shopping cart icon click */ },
-                        modifier = Modifier.weight(0.15f).clip(shape = RoundedCornerShape(75))
-                            .background(MaterialTheme.colorScheme.tertiary),
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "Shopping Cart Icon"
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = { /* Handle printer icon click */ },
-                        modifier = Modifier.weight(0.15f).clip(shape = RoundedCornerShape(75))
-                            .background(MaterialTheme.colorScheme.tertiary),
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Printer Icon"
+                        OutlinedTextField(
+                            value = name.text,
+                            onValueChange = { name = TextFieldValue(it) },
+                            label = { Text("Name:") },
+                            modifier = Modifier.padding(8.dp)
                         )
                     }
-                }
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            value = "" + event.participantsSchedule.size,
+                            readOnly = true,
+                            onValueChange = { },
+                            label = { Text("Teilnehmeranzahl:") },
+                            modifier = Modifier.padding(8.dp)
+                        )
+                        Button(
+                            // Calendar icon to open DatePicker
+                            onClick = {
+                                navigator.push(ParticipantScreen(event))
+                            },
+                            modifier = Modifier
+                                .padding(8.dp).height(IntrinsicSize.Min)
+                                .align(Alignment.CenterVertically),
 
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = name.text,
-                        onValueChange = { name = TextFieldValue(it) },
-                        label = { Text("Name:") },
-                        modifier = Modifier.padding(8.dp)
+                            ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Person",
+                            )
+                        }
+                    }
+                    SimpleDateRangePickerInDatePickerDialog(
+                        onDateSelectFunction
                     )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = "" + event.participantsSchedule.size,
-                        readOnly = true,
-                        onValueChange = { },
-                        label = { Text("Teilnehmeranzahl:") },
-                        modifier = Modifier.padding(8.dp)
-                    )
-                    Button(
-                        // Calendar icon to open DatePicker
-                        onClick = {
-                            navigator.push(ParticipantScreen(event))
-                        },
-                        modifier = Modifier
-                            .padding(8.dp).height(IntrinsicSize.Min).align(Alignment.CenterVertically),
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Person",
+                    Spacer(modifier = Modifier.height(16.dp))
+                    mealsGroupedByDate.forEach { it ->
+                        CardWithList(
+                            title =
+                            "" + it.key.dayOfMonth + "." + it.key.month,
+                            listItems =
+                            it.value.map { meal -> meal.toListItem() }.toMutableList(),
+                            addItemToList = { navigateToNewListItem(it.key) },
+                            onListItemClick = { navigateToMeal(it.getItem()) }
                         )
                     }
-                }
-                SimpleDateRangePickerInDatePickerDialog(
-                    onDateSelectFunction
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                mealsGroupedByDate.forEach { it ->
-                    CardWithList(
-                        "" + it.key.dayOfMonth + "." + it.key.month,
-                        it.value.map { meal -> meal.toListItem() }.toMutableList(), navigateToNewListItem
-                    )
-                }
 
 
-                // Rest of the code remains the same...
+                    // Rest of the code remains the same...
+                }
             }
         }
-
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun topBarEventPage() {
+    TopAppBar(
+        title = {
+            Text(text = "Lager bearbeiten") },
+        navigationIcon = {
+            NavigationIconButton()
+        },
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+            ) {
+
+                IconButton(
+                    onClick = { /* Handle shopping cart icon click */ },
+                    modifier = Modifier.clip(shape = RoundedCornerShape(75))
+                        .background(MaterialTheme.colorScheme.tertiary),
+
+                    ) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Shopping Cart Icon"
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = { /* Handle printer icon click */ },
+                    modifier = Modifier.clip(shape = RoundedCornerShape(75))
+                        .background(MaterialTheme.colorScheme.tertiary),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = "Printer Icon"
+                    )
+                }
+            }
+        }
+    )
+
+}
+
 
 

@@ -42,6 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import model.Event
 import model.Participant
 import view.admin.new_participant.NewParicipantScreen
+import view.shared.NavigationIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +58,7 @@ fun ParticipantSearchBar(allParicipants: List<Participant>, event: Event) {
 
     Scaffold(
         topBar = {
+            NavigationIconButton()
             SearchBar(
                 modifier = Modifier.fillMaxWidth(),
                 query = searchText,

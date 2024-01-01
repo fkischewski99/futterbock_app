@@ -11,5 +11,6 @@ data class Recipe(
     val price: String,
     val season: String,
     val source: String,
-    val time: String
+    val time: String,
+    val eaters: List<Participant>
 )

@@ -1,5 +1,7 @@
 package view.shared
 
+import getPlatformName
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDateTime
@@ -14,6 +16,10 @@ class HelperFunctions {
 
         fun formatDate(date: LocalDate): String{
             return "" + date.dayOfMonth + "." + date.monthNumber + "." + date.year;
+        }
+
+        fun isWindowsPlatform(): Boolean {
+            return getPlatformName().lowercase().contains("win")
         }
     }
 }
