@@ -1,4 +1,4 @@
-package view.participants
+package view.event.participants
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen

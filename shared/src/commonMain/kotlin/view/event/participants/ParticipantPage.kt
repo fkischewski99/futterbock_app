@@ -1,4 +1,4 @@
-package view.participants
+package view.event.participants
 
 import CardWithList
 import androidx.compose.foundation.background

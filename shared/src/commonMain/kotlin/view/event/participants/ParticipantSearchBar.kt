@@ -1,19 +1,26 @@
-package view.participants
+package view.event.participants
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +41,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import model.Event
 import model.Participant
+import view.admin.new_participant.NewParicipantScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +101,7 @@ fun ParticipantSearchBar(allParicipants: List<Participant>, event: Event) {
                             },
                             onClick = { selectedParticipants.remove(it) },
                             selected = true,
+                            modifier = Modifier.padding(4.dp),
                             trailingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Close,
@@ -128,20 +137,48 @@ fun ParticipantSearchBar(allParicipants: List<Participant>, event: Event) {
                 }
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomStart
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    FloatingActionButton(
-                        onClick = { active = false },
-                        modifier = Modifier.clip(shape = RoundedCornerShape(50)),
-                        containerColor = MaterialTheme.colorScheme.onPrimary
+                    Column(
+                        horizontalAlignment = Alignment.End,
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Add Icon"
-                        )
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                //TODO
+                                navigator.push(NewParicipantScreen(null));
+                                event.participantsSchedule = selectedParticipants
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                                .clip(shape = RoundedCornerShape(75)), // Limit the width to prevent stretching,
+                            containerColor = MaterialTheme.colorScheme.onPrimary,
+
+                            ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add Icon"
+                            )
+                            Text("Teilnehmer anlegen       ")
+                        }
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                navigator.pop()
+                                event.participantsSchedule = selectedParticipants
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                                .clip(shape = RoundedCornerShape(75)), // Limit the width to prevent stretching,
+                            elevation = FloatingActionButtonDefaults.elevation(16.dp),
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Add Icon"
+                            )
+                            Text("Teilnehmer übernehmen")
+                        }
                     }
                 }
             }
+
             //elevation = AppBarDefaults.TopAppBarElevation
 
         }

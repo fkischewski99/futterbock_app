@@ -1,8 +1,9 @@
-package view.new_event
+package view.event.new_event
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.datetime.LocalDate
+import model.EatingHabit
 import model.Event
 import model.Meal
 import model.Participant
@@ -31,7 +32,7 @@ class NewEventScreen(private val eventId: String?) : Screen {
         var participant = Participant(
             listOf("Kiwi"),
             null,
-            "vegetarisch",
+            EatingHabit.VEGETARISCH,
             "Ronja",
             "Wehmeyer",
             LocalDate.parse("2023-12-01"),
@@ -40,7 +41,7 @@ class NewEventScreen(private val eventId: String?) : Screen {
         var participant2 = Participant(
             listOf(""),
             null,
-            "vegetarisch",
+            EatingHabit.OMNIVORE,
             "Fredö",
             "K",
             LocalDate.parse("2023-12-01"),

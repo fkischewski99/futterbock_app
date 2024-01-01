@@ -1,4 +1,4 @@
-package view.recepie_overview_screen
+package view.event.recepie_overview_screen
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen

@@ -1,4 +1,4 @@
-package view.new_meal_screen
+package view.event.new_meal_screen
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen

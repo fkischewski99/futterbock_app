@@ -3,7 +3,7 @@ package model
 import cafe.adriel.voyager.core.screen.Screen
 import view.shared.ListItem
 import kotlinx.datetime.LocalDate
-import view.new_event.NewEventScreen
+import view.event.new_event.NewEventScreen
 import view.shared.HelperFunctions
 
 data class Event(
@@ -15,7 +15,7 @@ data class Event(
     val kitchenSchedule: String,
     val meals: List<Meal>,
     val name: String,
-    val participantsSchedule: List<Participant>
+    var participantsSchedule: List<Participant>
 )
 
 // Extension function to map Event to ListItem

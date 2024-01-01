@@ -1,4 +1,4 @@
-package view.recepie_overview_screen
+package view.event.recepie_overview_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

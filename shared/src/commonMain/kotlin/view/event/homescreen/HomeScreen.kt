@@ -1,4 +1,4 @@
-package view.homescreen
+package view.event.homescreen
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen

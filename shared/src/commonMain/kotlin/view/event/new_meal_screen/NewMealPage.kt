@@ -1,5 +1,6 @@
-package view.new_meal_screen
+package view.event.new_meal_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import model.Participant
-import view.recepie_overview_screen.RecepieScreen
+import view.event.recepie_overview_screen.RecepieScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,94 +59,100 @@ fun NewMealPage(participants: List<Participant>) {
     }
 
     //val context = LocalContext.current
-
-    Scaffold(
-        topBar = {
-            SearchBar(
-                modifier = Modifier.fillMaxWidth(),
-                query = searchText,
-                placeholder = { Text(text = "Rezept auswählen") },
-                onQueryChange = {
-                    searchText = it
-                },
-                onSearch = {
-                    active = false
-                },
-                active = active,
-                onActiveChange = {
-                    active = it
-                },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Suche")
-                },
-                trailingIcon = {
-                    if (active) {
-                        Icon(
-                            modifier = Modifier.clickable {
-                                if (searchText.isEmpty()) {
-                                    active = false
-                                } else {
-                                    searchText = ""
-                                }
-
-                            },
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close"
-                        )
-                    }
-                }
-            ) {
-                recepieList.filter {
-                    it.lowercase().contains(searchText.lowercase())
-                }.forEach {
-                    Row(
-                        modifier = Modifier.padding(16.dp).clickable {
-                            active = false
-                            searchText = ""
-                            selectedRecepies.add(it)
-                        }
-
-                    ) {
-                        Text(text = it)
-                    }
-                    Divider()
-                }
-            }
-            //elevation = AppBarDefaults.TopAppBarElevation
-
-        }
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background),
     ) {
+        Scaffold(
+            topBar = {
+                SearchBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    query = searchText,
+                    placeholder = { Text(text = "Rezept auswählen") },
+                    onQueryChange = {
+                        searchText = it
+                    },
+                    onSearch = {
+                        active = false
+                    },
+                    active = active,
+                    onActiveChange = {
+                        active = it
+                    },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Suche")
+                    },
+                    trailingIcon = {
+                        if (active) {
+                            Icon(
+                                modifier = Modifier.clickable {
+                                    if (searchText.isEmpty()) {
+                                        active = false
+                                    } else {
+                                        searchText = ""
+                                    }
 
-        Column(
-            modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())
-        ) {
-            Spacer(modifier = Modifier.height(60.dp))
-            selectedRecepies.forEach {
-                ElevatedCard(
-                    elevation = CardDefaults.cardElevation(8.dp),
-                    modifier = Modifier.padding(top = 16.dp, start = 8.dp)
-                ) {
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ){
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Rezept ansehen",
-                            modifier = Modifier.clickable {
-                                navigator.push(RecepieScreen())
-                            })
-                        Text(
-                            it,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(8.dp),
-                            textAlign = TextAlign.Center
-                        )
+                                },
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close"
+                            )
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                ) {
+                    recepieList.filter {
+                        it.lowercase().contains(searchText.lowercase())
+                    }.forEach {
+                        Row(
+                            modifier = Modifier.padding(16.dp).clickable {
+                                active = false
+                                searchText = ""
+                                selectedRecepies.add(it)
+                            }
 
-                    // Replace this with your recipe content
-                    RecipeWithMembers(participants)
+                        ) {
+                            Text(text = it)
+                        }
+                        Divider()
+                    }
+                }
+                //elevation = AppBarDefaults.TopAppBarElevation
+
+            }
+        ) {
+
+            Column(
+                modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(60.dp))
+                selectedRecepies.forEach {
+                    ElevatedCard(
+                        elevation = CardDefaults.cardElevation(8.dp),
+                        modifier = Modifier.padding(top = 16.dp, start = 8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Rezept ansehen",
+                                modifier = Modifier.clickable {
+                                    navigator.push(RecepieScreen())
+                                })
+                            Text(
+                                it,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Replace this with your recipe content
+                        RecipeWithMembers(participants)
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package view.new_event
+package view.event.new_event
 
 import AppTheme
 import CardWithList
@@ -32,8 +32,8 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import model.Event
 import model.toListItem
-import view.new_meal_screen.NewMealScreen
-import view.participants.ParticipantScreen
+import view.event.new_meal_screen.NewMealScreen
+import view.event.participants.ParticipantScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

@@ -8,7 +8,8 @@ import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import view.homescreen.HomeScreen
+import view.admin.new_participant.NewParicipantScreen
+import view.event.homescreen.HomeScreen
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -22,8 +23,8 @@ fun App() {
         AppTheme{
             //RecepieScreen()
             //NewEventPage()
-            Navigator(HomeScreen()) {navigator -> SlideTransition(navigator) }
-            //Navigator(AddParticipantToEventScreen()) {navigator -> SlideTransition(navigator) }
+            Navigator(HomeScreen()) { navigator -> SlideTransition(navigator) }
+            //Navigator(NewParicipantScreen(null)) {navigator -> SlideTransition(navigator) }
         }
 
     }

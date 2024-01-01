@@ -7,13 +7,20 @@ import view.shared.ListItem
 
 class Participant(
     val allergies: List<String>,
-    val birthdate: LocalDate?,
-    val eatingHabit: String,
-    val firstName: String,
-    val lastName: String,
+    var birthdate: LocalDate?,
+    var eatingHabit: EatingHabit,
+    var firstName: String,
+    var lastName: String,
     var from: LocalDate?,
     var to: LocalDate?
 )
+
+enum class EatingHabit {
+    VEGAN,
+    VEGETARISCH,
+    PESCETARISCH,
+    OMNIVORE
+}
 
 fun Participant.toListItem(): ListItem<Participant> {
     return object : ListItem<Participant> {
