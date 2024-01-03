@@ -73,7 +73,7 @@ fun NewMealPage(meal: Meal, participants: List<Participant>) {
                 selectedRecepies.forEach {
                     ElevatedCard(
                         elevation = CardDefaults.cardElevation(8.dp),
-                        modifier = Modifier.padding(top = 16.dp, start = 8.dp)
+                        modifier = Modifier.padding(top = 16.dp, start = 8.dp, end = 8.dp)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

@@ -33,6 +33,7 @@ import kotlinx.datetime.toLocalDateTime
 import model.Event
 import model.MealType
 import model.toListItem
+import ui.ListToListWithReorderScreen
 import view.event.new_meal_screen.NewMealScreen
 import view.event.participants.ParticipantScreen
 import view.shared.NavigationIconButton
@@ -119,7 +120,7 @@ fun NewEventPage(event: Event) {
                     ) {
                         OutlinedTextField(
                             value = name.text,
-                            onValueChange = { name = TextFieldValue(it) },
+                            onValueChange = { name = TextFieldValue(it)},
                             label = { Text("Name:") },
                             modifier = Modifier.padding(8.dp)
                         )
@@ -176,6 +177,7 @@ fun NewEventPage(event: Event) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun topBarEventPage() {
+    val navigator = LocalNavigator.currentOrThrow
     TopAppBar(
         title = {
             Text(text = "Lager bearbeiten") },
@@ -188,7 +190,7 @@ fun topBarEventPage() {
             ) {
 
                 IconButton(
-                    onClick = { /* Handle shopping cart icon click */ },
+                    onClick = { navigator.push(ListToListWithReorderScreen()) },
                     modifier = Modifier.clip(shape = RoundedCornerShape(75))
                         .background(MaterialTheme.colorScheme.tertiary),
 

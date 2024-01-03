@@ -13,7 +13,6 @@ class ExampleObjects {
             description = "Apfelkuchen",
             dietaryHabits = "Vegan",
             ingredients = listOf(
-                //TODO das ist noch richtig falsch :D
                 Ingredient(amount = 200, conversionFactor = 1.2 , name = "Apfel", category = "bla", metricUnit = "g", scoutUnit = "g"),
                 Ingredient(amount = 500, conversionFactor = 1.2 , name = "Zucker", category = "bla", metricUnit = "g", scoutUnit = "g"),
             ),

@@ -37,6 +37,8 @@ kotlin {
 
                 implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
                 implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
+                // Drag and Drop
+                implementation("com.mohamedrejeb.dnd:compose-dnd:0.1.0")
                 // Android Studio Preview support
                 //implementation("androidx.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
