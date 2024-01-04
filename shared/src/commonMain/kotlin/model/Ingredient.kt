@@ -8,5 +8,6 @@ data class Ingredient(
     val metricUnit: String,
     val name: String,
     val amount: Int,
+    var shoppingDone: Boolean = false,
     var note: String = ""
 )

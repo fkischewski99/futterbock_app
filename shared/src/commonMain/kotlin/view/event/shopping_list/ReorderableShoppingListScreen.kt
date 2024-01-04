@@ -15,32 +15,19 @@
  */
 package ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.List
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -48,26 +35,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mohamedrejeb.compose.dnd.annotation.ExperimentalDndApi
-import com.mohamedrejeb.compose.dnd.drop.dropTarget
-import com.mohamedrejeb.compose.dnd.reorder.ReorderContainer
-import com.mohamedrejeb.compose.dnd.reorder.ReorderableItem
-import com.mohamedrejeb.compose.dnd.reorder.rememberReorderState
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import model.Ingredient
-import view.event.shopping_list.ReorderableList
+import view.event.shopping_list.ListToListWithReorderContent
+import view.event.shopping_list.ShoppedItems
+import view.shared.NavigationIconButton
 
 class ListToListWithReorderScreen : Screen {
 
@@ -84,7 +59,7 @@ class ListToListWithReorderScreen : Screen {
             scoutUnit = "g",
             note = "abcdefg"
         );
-        val second =Ingredient(
+        val second = Ingredient(
             objectId = "2",
             amount = 500,
             conversionFactor = 1.2,
@@ -109,8 +84,74 @@ class ListToListWithReorderScreen : Screen {
             name = "Wein",
             category = "bla",
             metricUnit = "g",
-            scoutUnit = "g"
+            scoutUnit = "g",
+            shoppingDone = true
         );
-        ReorderableList(listOf(first, second, third, fourth))
+
+        var isView1Visible by remember { mutableStateOf(true) }
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Einkaufsliste",
+                        )
+                    },
+                    navigationIcon = {
+                        NavigationIconButton()
+                    },
+                )
+            },
+        ) {paddingValues ->
+
+
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(paddingValues).padding(start = 32.dp, end = 32.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        onClick = { isView1Visible = true },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .padding(end = 4.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isView1Visible) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(28.dp, 0.dp, 0.dp, 28.dp)
+                    ) {
+                        Text(
+                            text = "Einkaufsliste",
+                            color = if (isView1Visible) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    Button(
+                        onClick = { isView1Visible = false },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (!isView1Visible) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(0.dp, 28.dp, 28.dp, 0.dp)
+                    ) {
+                        Text(
+                            text = "Neu Ordnen",
+                            color = if (!isView1Visible) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // Displaying views based on the boolean state
+                if (!isView1Visible) {
+                    ListToListWithReorderContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding()
+                            .padding(20.dp),
+                        ingredientsList = listOf(first, second, third, fourth)
+                    )
+                } else {
+                    ShoppedItems(listOf(first, second, third, fourth))
+                }
+            }
+        }
     }
 }

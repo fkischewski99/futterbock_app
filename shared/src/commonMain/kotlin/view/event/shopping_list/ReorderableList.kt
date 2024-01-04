@@ -1,10 +1,13 @@
 package view.event.shopping_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -31,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,47 +60,65 @@ import view.shared.NavigationIconButton
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun ReorderableList(ingredients: List<Ingredient>) {
-    val navigator = LocalNavigator.currentOrThrow
+public fun ShoppedItems(ingredientsList: List<Ingredient>) {
+    var expanded by remember { mutableStateOf(true) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Einkaufsliste",
-                    )
-                },
-                navigationIcon = {
-                    NavigationIconButton()
-                },
-            )
-        },
-    ) { paddingValues ->
-        ListToListWithReorderContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .padding(paddingValues)
-                .padding(20.dp),
-            ingredientsList = ingredients
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = if (expanded) "Erledigte" else "Erledigte einblenden",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.weight(1f)
         )
+        Icon(
+            imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+    }
 
+    if (expanded) {
+        ingredientsList.forEach { ingredient ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = ingredient.shoppingDone,
+                    onCheckedChange = { isChecked ->
+                        ingredient.shoppingDone = isChecked
+                    }
+                )
+                Text(
+                    text = "" + ingredient.amount + ingredient.metricUnit,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(start = 8.dp).width(70.dp),
+                )
+                Text(
+                    text = ingredient.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
     }
 }
 
 @OptIn(ExperimentalDndApi::class)
 @Composable
-private fun ListToListWithReorderContent(
+fun ListToListWithReorderContent(
     modifier: Modifier,
     ingredientsList: List<Ingredient>
 ) {
-    var items by remember {
-        mutableStateOf(
-            ingredientsList
-        )
-    }
+    var items = remember {mutableStateListOf<Ingredient>().apply{addAll(ingredientsList)}}
 
     val scope = rememberCoroutineScope()
     val reorderState = rememberReorderState<Ingredient>()
@@ -107,17 +131,15 @@ private fun ListToListWithReorderContent(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             state = lazyListState,
-            modifier = Modifier
-                .fillMaxSize()
         ) {
-            items(items, key = { it }) { item ->
+            items(items.filter { !it.shoppingDone }, key = { it }) { item ->
                 ReorderableItem(
                     state = reorderState,
                     key = item,
                     data = item,
                     onDrop = {},
                     onDragEnter = { state ->
-                        items = items.toMutableList().apply {
+                        items = items.apply {
                             val index = indexOf(item)
                             if (index == -1) return@ReorderableItem
                             remove(state.data)
@@ -137,7 +159,7 @@ private fun ListToListWithReorderContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(60.dp),
-                            ingredient = item
+                            ingredient = item,
                         )
                     },
                     modifier = Modifier
@@ -149,7 +171,9 @@ private fun ListToListWithReorderContent(
                             }
                             .fillMaxWidth()
                             .height(60.dp),
-                        ingredient = item
+                        ingredient = item,
+                        onCheckboxClicked = {val index = ingredientsList.indexOf(item)
+                        ingredientsList[index].shoppingDone = true}
                     )
                 }
             }
@@ -162,10 +186,9 @@ private fun ListToListWithReorderContent(
 fun RedBox(
     isDragShadow: Boolean = false,
     modifier: Modifier = Modifier,
-    ingredient: Ingredient
+    ingredient: Ingredient,
+    onCheckboxClicked: () -> Unit = {}
 ) {
-
-    var note by remember { mutableStateOf(ingredient.note) }
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -190,7 +213,7 @@ fun RedBox(
         ) {
             Checkbox(
                 false,
-                onCheckedChange = {},
+                onCheckedChange = {ingredient.shoppingDone = it},
                 colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.onPrimary)
             )
             Text(

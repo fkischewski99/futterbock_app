@@ -4,6 +4,11 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+repositories{
+    mavenCentral()
+    //google()
+}
+
 
 
 kotlin {
@@ -26,6 +31,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 val voyagerVersion = "1.0.0";
+                val lifecycleVersion = "2.6.2";
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -39,6 +45,10 @@ kotlin {
                 implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
                 // Drag and Drop
                 implementation("com.mohamedrejeb.dnd:compose-dnd:0.1.0")
+                //ViewModel
+                // ViewModel utilities for Compose
+                //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+                //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
                 // Android Studio Preview support
                 //implementation("androidx.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")

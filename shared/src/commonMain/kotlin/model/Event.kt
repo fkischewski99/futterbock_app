@@ -14,7 +14,7 @@ data class Event(
     val group: String,
     val kitchenSchedule: String,
     val meals: List<Meal>,
-    val name: String,
+    var name: String,
     var participantsSchedule: List<Participant>
 )
 

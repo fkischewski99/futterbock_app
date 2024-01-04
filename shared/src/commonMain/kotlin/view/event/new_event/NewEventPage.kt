@@ -120,7 +120,7 @@ fun NewEventPage(event: Event) {
                     ) {
                         OutlinedTextField(
                             value = name.text,
-                            onValueChange = { name = TextFieldValue(it)},
+                            onValueChange = { name = TextFieldValue(it); event.name = it},
                             label = { Text("Name:") },
                             modifier = Modifier.padding(8.dp)
                         )

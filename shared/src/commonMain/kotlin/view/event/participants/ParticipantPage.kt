@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +29,9 @@ import model.Participant
 import model.toListItem
 import view.shared.DateRangePickerDialog
 import view.shared.ListItem
+import view.shared.NavigationIconButton
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParticipantPage(event: Event) {
     var currentList by mutableStateOf(event.participantsSchedule.map { it.toListItem() })
@@ -39,38 +45,50 @@ fun ParticipantPage(event: Event) {
     }
 
     fun setFromToOfPatient(start: Long, end: Long) {
-        if(currentParticipant == null)
+        if (currentParticipant == null)
             return
         val startDateSelect = Instant.fromEpochMilliseconds(start)
         val endDateSelect = Instant.fromEpochMilliseconds(end)
-        currentParticipant!!.from = startDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
-        currentParticipant!!.to = endDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+        currentParticipant!!.from =
+            startDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
+        currentParticipant!!.to =
+            endDateSelect.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date;
     }
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background),
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Teilnehmerliste") },
+                navigationIcon = { NavigationIconButton() }
+            )
+        }
     ) {
 
-        Column(modifier = Modifier.padding(8.dp).verticalScroll(rememberScrollState())) {
-            CardWithList(
-                title = "Teilnehmer",
-                listItems = currentList,
-                onListItemClick = { setDatePickerActiveForItem(it) },
-                addItemToList = {navigator.push(ParticipantSearchBarScreen(event))}
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = it.calculateTopPadding())
+                .background(MaterialTheme.colorScheme.background),
+        ) {
 
-            )
+            Column(modifier = Modifier.padding(8.dp).verticalScroll(rememberScrollState())) {
+                CardWithList(
+                    title = "Teilnehmer",
+                    listItems = currentList,
+                    onListItemClick = { setDatePickerActiveForItem(it) },
+                    addItemToList = { navigator.push(ParticipantSearchBarScreen(event)) }
+
+                )
+            }
+            if (showDatePicker) {
+                DateRangePickerDialog(
+                    onSelect = { startMillis, endMillis ->
+                        setFromToOfPatient(startMillis, endMillis)
+                        showDatePicker = false // Set value to false after onSelect is executed
+                    }
+                )
+            }
+
+
         }
-        if (showDatePicker) {
-            DateRangePickerDialog(
-                onSelect = { startMillis, endMillis ->
-                    setFromToOfPatient(startMillis, endMillis)
-                    showDatePicker = false // Set value to false after onSelect is executed
-                }
-            )
-        }
-
-
     }
 }
