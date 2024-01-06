@@ -30,12 +30,12 @@ import view.shared.ListItem
 fun EventOverview() {
     MaterialTheme {
         var meal = Meal(
-            LocalDate.parse("2023-12-01"),
+            LocalDate.parse("2024-12-01"),
             MealType.MITTAG,
             ExampleObjects.getAllRecepies()
         )
         var meal2 = Meal(
-            LocalDate.parse("2023-12-03"),
+            LocalDate.parse("2024-12-01"),
             MealType.MITTAG,
             ExampleObjects.getAllRecepies()
         )
@@ -47,8 +47,8 @@ fun EventOverview() {
             EatingHabit.VEGETARISCH,
             "Ronja",
             "Wehmeyer",
-            LocalDate.parse("2023-12-01"),
-            LocalDate.parse("2023-12-04")
+            LocalDate.parse("2024-12-01"),
+            LocalDate.parse("2024-12-04"),
         );
         var participant2 = Participant(
             listOf(""),
@@ -56,14 +56,14 @@ fun EventOverview() {
             EatingHabit.OMNIVORE,
             "Fredö",
             "K",
-            LocalDate.parse("2023-12-01"),
-            LocalDate.parse("2023-12-03")
+            LocalDate.parse("2024-12-01"),
+            LocalDate.parse("2024-12-04"),
         );
         val participants = mutableListOf(participant, participant2)
         val event = Event(
             "id",
-            LocalDate.parse("2023-12-01"),
-            LocalDate.parse("2023-12-04"),
+            LocalDate.parse("2024-12-01"),
+            LocalDate.parse("2024-12-04"),
             "Stamm",
             "Group",
             "kitchen",
@@ -73,8 +73,8 @@ fun EventOverview() {
         )
         val pastEvent = Event(
             "id",
-            LocalDate.parse("2024-12-08"),
-            LocalDate.parse("2024-12-10"),
+            LocalDate.parse("2023-12-08"),
+            LocalDate.parse("2023-12-10"),
             "stammeslager",
             "ab",
             "yoyo",

@@ -100,7 +100,6 @@ fun ShoppingItem(
         modifier = Modifier.fillMaxWidth().padding(4.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-            .height(48.dp)
     ) {
         Checkbox(
             ingredient.shoppingDone,
@@ -117,11 +116,11 @@ fun ShoppingItem(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.width(70.dp),
         )
-        BasicTextField(
+        OutlinedTextField(
             value = noteState,
             onValueChange = { noteState = it },
             singleLine = true,
-            //label = { Text("Notiz:") },
+            label = { Text("Notiz:") },
             modifier = Modifier.fillMaxWidth()
         )
     }

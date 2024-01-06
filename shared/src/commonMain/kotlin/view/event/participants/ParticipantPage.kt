@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,7 +35,9 @@ import view.shared.NavigationIconButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParticipantPage(event: Event) {
-    var currentList by mutableStateOf(event.participantsSchedule.map { it.toListItem() })
+    var currentList = mutableStateListOf<ListItem<Participant>>().apply {
+        event.participantsSchedule.forEach { participant -> add(participant.toListItem()) }
+    }//mutableStateOf(event.participantsSchedule.map { it.toListItem() })
     var showDatePicker by remember { mutableStateOf(false) }
     var currentParticipant: Participant? = null;
     val navigator = LocalNavigator.currentOrThrow
@@ -76,7 +79,7 @@ fun ParticipantPage(event: Event) {
                     listItems = currentList,
                     onListItemClick = { setDatePickerActiveForItem(it) },
                     addItemToList = { navigator.push(ParticipantSearchBarScreen(event)) },
-                    onDeleteClick = {}
+                    onDeleteClick = {participant -> currentList.remove(participant)}
 
                 )
             }
