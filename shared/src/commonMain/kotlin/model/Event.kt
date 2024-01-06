@@ -13,7 +13,7 @@ data class Event(
     val eventType: String,
     val group: String,
     val kitchenSchedule: String,
-    val meals: List<Meal>,
+    val meals: MutableList<Meal>,
     var name: String,
     var participantsSchedule: List<Participant>
 )
@@ -32,7 +32,7 @@ fun Event.toListItem(): ListItem<Event> {
         }
 
         override fun navigateTo(): Screen {
-            return NewEventScreen(this@toListItem.id);
+            return NewEventScreen(this@toListItem);
         }
 
         override fun getItem(): Event {

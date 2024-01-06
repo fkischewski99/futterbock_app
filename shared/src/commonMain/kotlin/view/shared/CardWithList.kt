@@ -9,6 +9,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -77,6 +81,7 @@ fun <T> ListItemComponent(
     onListItemClick: ((ListItem<T>) -> Unit)? = null
 ) {
     val navigator = LocalNavigator.currentOrThrow
+    var showDialog by remember { mutableStateOf(false) }
 
     Row(modifier = Modifier.fillMaxWidth().clickable {
         if (onListItemClick != null) {
@@ -94,7 +99,7 @@ fun <T> ListItemComponent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             IconButton(
-                onClick = { onDeleteClick(listItem) },
+                onClick = { showDialog = true },
                 modifier = Modifier.padding(end = 8.dp),
             ) {
                 Icon(
@@ -103,6 +108,39 @@ fun <T> ListItemComponent(
                     tint = Color.Red
                 )
             }
+            if(showDialog){
+                ConfirmDialog({ onDeleteClick(listItem) }, {showDialog = false})
+            }
         }
     }
 }
+
+@Composable
+fun ConfirmDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = "Löschen Bestätigen") },
+            text = { Text(text = "Willst du das Item wirklich löschen?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onConfirm()
+                        onDismiss()
+                    }
+                ) {
+                    Text("Bestätigen")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = onDismiss
+                ) {
+                    Text("Abbrechen")
+                }
+            }
+        )
+}
+

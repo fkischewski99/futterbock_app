@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import model.Ingredient
 import view.event.shopping_list.ListToListWithReorderContent
-import view.event.shopping_list.ShoppedItems
+import view.event.shopping_list.ShoppingList
 import view.shared.NavigationIconButton
 
 class ListToListWithReorderScreen : Screen {
@@ -149,7 +149,7 @@ class ListToListWithReorderScreen : Screen {
                         ingredientsList = listOf(first, second, third, fourth)
                     )
                 } else {
-                    ShoppedItems(listOf(first, second, third, fourth))
+                    ShoppingList(listOf(first, second, third, fourth))
                 }
             }
         }

@@ -18,9 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.datetime.DatePeriod
@@ -45,12 +43,10 @@ fun NewEventPage(event: Event) {
     val navigator = LocalNavigator.currentOrThrow
     var name by remember { mutableStateOf(TextFieldValue(event.name)) }
     var mealsGroupedByDate by remember {
-        mutableStateOf<Map<LocalDate, MutableList<Meal>>>(mutableMapOf())
-    }
+        mutableStateOf<Map<LocalDate, List<Meal>>>(emptyMap())}
 
 
     //TODO remove test DATA
-
 
     //End of Test Data
     fun groupMealsByDate() {
@@ -65,6 +61,13 @@ fun NewEventPage(event: Event) {
             updatedMap[currentDate] = mealsForCurrentDate
         }
         mealsGroupedByDate = updatedMap.toMap();
+    }
+
+    fun removeMealFromMap(
+        mealToRemove: Meal,
+    ) {
+        event.meals.remove(mealToRemove)
+        groupMealsByDate()
     }
 
     LaunchedEffect(Unit) {
@@ -105,7 +108,7 @@ fun NewEventPage(event: Event) {
         Scaffold(
             topBar = {
                 topBarEventPage()
-                }) {
+            }) {
             Surface(
                 color = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.onBackground,
@@ -120,7 +123,9 @@ fun NewEventPage(event: Event) {
                     ) {
                         OutlinedTextField(
                             value = name.text,
-                            onValueChange = { name = TextFieldValue(it); event.name = it},
+                            onValueChange = { value ->
+                                name = TextFieldValue(value); event.name = value
+                            },
                             label = { Text("Name:") },
                             modifier = Modifier.padding(8.dp)
                         )
@@ -152,7 +157,9 @@ fun NewEventPage(event: Event) {
                         }
                     }
                     SimpleDateRangePickerInDatePickerDialog(
-                        onDateSelectFunction
+                        from = event.from,
+                        to = event.to,
+                        onSelect = onDateSelectFunction
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     mealsGroupedByDate.forEach { it ->
@@ -162,7 +169,10 @@ fun NewEventPage(event: Event) {
                             listItems =
                             it.value.map { meal -> meal.toListItem() }.toMutableList(),
                             addItemToList = { navigateToNewListItem(it.key) },
-                            onListItemClick = { navigateToMeal(it.getItem()) }
+                            onListItemClick = { item -> navigateToMeal(item.getItem()) },
+                            onDeleteClick = { meal ->
+                                removeMealFromMap(meal.getItem())
+                            }
                         )
                     }
 
@@ -180,7 +190,8 @@ fun topBarEventPage() {
     val navigator = LocalNavigator.currentOrThrow
     TopAppBar(
         title = {
-            Text(text = "Lager bearbeiten") },
+            Text(text = "Lager bearbeiten")
+        },
         navigationIcon = {
             NavigationIconButton()
         },

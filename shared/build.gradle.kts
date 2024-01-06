@@ -32,6 +32,8 @@ kotlin {
             dependencies {
                 val voyagerVersion = "1.0.0";
                 val lifecycleVersion = "2.6.2";
+                val koin = "3.4.3";
+                val koincompose = "1.0.4";
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -39,13 +41,17 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
-                implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 
                 implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
                 implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
                 // Drag and Drop
                 implementation("com.mohamedrejeb.dnd:compose-dnd:0.1.0")
-                //ViewModel
+
+
+
+                api("io.insert-koin:koin-core:3.4.3")
+                api("io.insert-koin:koin-compose:1.0.4")
+              //ViewModel
                 // ViewModel utilities for Compose
                 //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
                 //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -60,6 +66,7 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
+                implementation("io.insert-koin:koin-android:3.4.3")
                 //implementation("org.jetbrains.compose.ui:ui-tooling-preview")
                 //implementation("androidx.compose.material3:material3:1.1.2")
             }

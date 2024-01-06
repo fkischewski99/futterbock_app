@@ -10,7 +10,7 @@ import model.MealType
 import model.Participant
 import view.event.new_meal_screen.ExampleObjects
 
-class NewEventScreen(private val eventId: String?) : Screen {
+class NewEventScreen(private var event: Event?) : Screen {
 
 
     fun createNewEvent(): Event {
@@ -28,7 +28,7 @@ class NewEventScreen(private val eventId: String?) : Screen {
             MealType.MITTAG,
             ExampleObjects.getAllRecepies()
         )
-        var meals = listOf(meal, meal2);
+        var meals = mutableListOf(meal, meal2);
 
         var participant = Participant(
             listOf("Kiwi"),
@@ -48,7 +48,7 @@ class NewEventScreen(private val eventId: String?) : Screen {
             LocalDate.parse("2023-12-01"),
             LocalDate.parse("2023-12-03")
         );
-        val participants = listOf(participant, participant2)
+        val participants = mutableListOf(participant, participant2)
         return Event(
             "id",
             LocalDate.parse("2023-12-01"),
@@ -64,12 +64,9 @@ class NewEventScreen(private val eventId: String?) : Screen {
 
     @Composable
     override fun Content() {
-        val event: Event;
-        if(eventId != null){
-            event = getEventById(eventId)
-        }else{
+        if(event == null){
             event = createNewEvent()
         }
-        NewEventPage(event)
+        NewEventPage(event!!)
     }
 }

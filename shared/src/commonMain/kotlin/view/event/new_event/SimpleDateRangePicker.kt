@@ -7,19 +7,13 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,18 +23,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.atStartOfDayIn
 import view.shared.DateRangePickerDialog
 import view.shared.HelperFunctions
 import kotlin.time.Duration.Companion.days
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-fun SimpleDateRangePickerInDatePickerDialog(onSelect: ((selectedStartMilis: Long, selectedEndMilis: Long) -> Unit)) {
+fun SimpleDateRangePickerInDatePickerDialog(
+    onSelect: (selectedStartMilis: Long, selectedEndMilis: Long) -> Unit,
+    from: LocalDate?,
+    to: LocalDate?
+) {
+
+    fun getMillis(date: LocalDate?): Long {
+        if(date != null){
+            return date.atStartOfDayIn(kotlinx.datetime.TimeZone.currentSystemDefault()).toEpochMilliseconds()
+        }
+        return Clock.System.now().toEpochMilliseconds()
+    }
     var showDatePicker by remember { mutableStateOf(false) }
-    var dateStartMillis by remember { mutableStateOf(Clock.System.now().toEpochMilliseconds()) }
-    var dateEndMillis by remember { mutableStateOf(Clock.System.now().plus(4.days).toEpochMilliseconds()) }
+    var dateStartMillis by remember { mutableStateOf(getMillis(from)) }
+    var dateEndMillis by remember { mutableStateOf(getMillis(to)) }
 
     //onSelect(dateRangePickerState.selectedStartDateMillis!!, dateRangePickerState.selectedEndDateMillis!!);
     FlowRow (

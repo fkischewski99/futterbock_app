@@ -30,7 +30,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -54,6 +53,7 @@ fun NewMealPage(meal: Meal, participants: List<Participant>) {
         mutableStateListOf(*meal.recipeSelections.toTypedArray())
 
 
+
     //val context = LocalContext.current
     Surface(
         modifier = Modifier
@@ -68,8 +68,11 @@ fun NewMealPage(meal: Meal, participants: List<Participant>) {
         ) {
 
             Column(
-                modifier = Modifier.padding(top = it.calculateTopPadding()).verticalScroll(rememberScrollState())
+                modifier = Modifier.padding(top = it.calculateTopPadding()).padding(top = 8.dp).verticalScroll(rememberScrollState())
             ) {
+                DropdownMenuMeal(meal)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Rezepte",  style = MaterialTheme.typography.headlineSmall,)
                 selectedRecepies.forEach {
                     ElevatedCard(
                         elevation = CardDefaults.cardElevation(8.dp),
@@ -93,7 +96,6 @@ fun NewMealPage(meal: Meal, participants: List<Participant>) {
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-
                         // Replace this with your recipe content
                         RecipeWithMembers(participants)
                     }

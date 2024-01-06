@@ -9,10 +9,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
 @Composable
-fun NavigationIconButton() {
+fun NavigationIconButton(onLeave: (() -> Unit)? = null) {
     val navigator = LocalNavigator.currentOrThrow
     IconButton(
         onClick = {
+            if(onLeave != null){
+                onLeave()
+            }
             navigator.pop()
         }
     ) {

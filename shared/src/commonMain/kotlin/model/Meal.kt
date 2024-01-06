@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalDate
 
 data class Meal(
     val day: LocalDate,
-    val mealType: MealType,
+    var mealType: MealType,
     val recipeSelections: List<Recipe>
 )
 

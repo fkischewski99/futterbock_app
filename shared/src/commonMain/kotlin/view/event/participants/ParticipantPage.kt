@@ -75,7 +75,8 @@ fun ParticipantPage(event: Event) {
                     title = "Teilnehmer",
                     listItems = currentList,
                     onListItemClick = { setDatePickerActiveForItem(it) },
-                    addItemToList = { navigator.push(ParticipantSearchBarScreen(event)) }
+                    addItemToList = { navigator.push(ParticipantSearchBarScreen(event)) },
+                    onDeleteClick = {}
 
                 )
             }

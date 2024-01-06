@@ -58,61 +58,6 @@ import kotlinx.coroutines.launch
 import model.Ingredient
 import view.shared.NavigationIconButton
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-
-@Composable
-public fun ShoppedItems(ingredientsList: List<Ingredient>) {
-    var expanded by remember { mutableStateOf(true) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded = !expanded },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = if (expanded) "Erledigte" else "Erledigte einblenden",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.weight(1f)
-        )
-        Icon(
-            imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onBackground
-        )
-    }
-
-    if (expanded) {
-        ingredientsList.forEach { ingredient ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = ingredient.shoppingDone,
-                    onCheckedChange = { isChecked ->
-                        ingredient.shoppingDone = isChecked
-                    }
-                )
-                Text(
-                    text = "" + ingredient.amount + ingredient.metricUnit,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(start = 8.dp).width(70.dp),
-                )
-                Text(
-                    text = ingredient.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalDndApi::class)
 @Composable
 fun ListToListWithReorderContent(
     modifier: Modifier,
