@@ -48,6 +48,10 @@ kotlin {
                 // Drag and Drop
                 implementation("com.mohamedrejeb.dnd:compose-dnd:0.1.0")
 
+                //Moko view model
+                api("dev.icerock.moko:mvvm-core:0.16.1") // only ViewModel, EventsDispatcher, Dispatchers.UI
+                api("dev.icerock.moko:mvvm-compose:0.16.1") // api mvvm-core, getViewModel for Compose Multiplatform
+
                 ///// KOIN /////
                 implementation(project.dependencies.platform("io.insert-koin:koin-bom:3.5.3"))
                 implementation("io.insert-koin:koin-core")

@@ -27,85 +27,11 @@ import view.shared.ListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventOverview() {
+fun EventOverview(viewModelEventOverview: ViewModelEventOverview) {
     MaterialTheme {
-        var meal = Meal(
-            LocalDate.parse("2024-12-01"),
-            MealType.MITTAG,
-            ExampleObjects.getAllRecepies()
-        )
-        var meal2 = Meal(
-            LocalDate.parse("2024-12-01"),
-            MealType.MITTAG,
-            ExampleObjects.getAllRecepies()
-        )
-        var meals = mutableListOf(meal, meal2);
-
-        var participant = Participant(
-            listOf("Kiwi"),
-            null,
-            EatingHabit.VEGETARISCH,
-            "Ronja",
-            "Wehmeyer",
-            LocalDate.parse("2024-12-01"),
-            LocalDate.parse("2024-12-04"),
-        );
-        var participant2 = Participant(
-            listOf(""),
-            null,
-            EatingHabit.OMNIVORE,
-            "Fredö",
-            "K",
-            LocalDate.parse("2024-12-01"),
-            LocalDate.parse("2024-12-04"),
-        );
-        val participants = mutableListOf(participant, participant2)
-        val event = Event(
-            "id",
-            LocalDate.parse("2024-12-01"),
-            LocalDate.parse("2024-12-04"),
-            "Stamm",
-            "Group",
-            "kitchen",
-            meals,
-            "Lager 1",
-            participants
-        )
-        val pastEvent = Event(
-            "id",
-            LocalDate.parse("2023-12-08"),
-            LocalDate.parse("2023-12-10"),
-            "stammeslager",
-            "ab",
-            "yoyo",
-            ArrayList(),
-            "ab",
-            ArrayList()
-        );
-
-        // Create a mutable state for the list
-        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val allEvents = listOf(event, pastEvent)
-        var currentList by mutableStateOf(mutableStateListOf<ListItem<Event>>()) // Events happening today or in the future
-        var pastList by mutableStateOf(mutableStateListOf<ListItem<Event>>())    // Past events
-
-        allEvents.forEach { event ->
-            if (event.from == null){
-                currentList.add(event.toListItem())
-            }
-            else if (event.from!! >= currentDate) {
-                currentList.add(event.toListItem())
-            } else {
-                pastList.add(event.toListItem())
-            }
-        }
+        val state = viewModelEventOverview.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
-
-        fun deleteItemFromCurrentList(item: ListItem<Event>) {
-            //TODO actually remove item
-            currentList.remove(item);
-        }
 
         Surface(
             modifier = Modifier
@@ -127,11 +53,11 @@ fun EventOverview() {
 
                     CardWithList(
                         "Aktuelle Lager",
-                        currentList,
+                        state.value.upcommingEvents,
                         addItemToList = { navigator.push(NewEventScreen(null)) },
-                        onDeleteClick = { deleteItemFromCurrentList(it) }
+                        onDeleteClick = { viewModelEventOverview.onDeleteClick(it.getItem()) }
                     )
-                    CardWithList("Vergangene Lager", pastList)
+                    CardWithList("Vergangene Lager", state.value.pastEvents)
                 }
             }
         }

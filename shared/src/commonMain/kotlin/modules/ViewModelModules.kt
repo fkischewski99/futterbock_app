@@ -2,4 +2,8 @@ package modules
 
 import org.koin.dsl.module
 
-val viewModelModules = module {  }
+import view.event.homescreen.ViewModelEventOverview
+
+val viewModelModules = module {
+    single { ViewModelEventOverview(get()) }
+}
