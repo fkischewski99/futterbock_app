@@ -4,9 +4,10 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-repositories{
+repositories {
     mavenCentral()
-    //google()
+    google()
+    gradlePluginPortal()
 }
 
 
@@ -47,11 +48,11 @@ kotlin {
                 // Drag and Drop
                 implementation("com.mohamedrejeb.dnd:compose-dnd:0.1.0")
 
-
-
-                api("io.insert-koin:koin-core:3.4.3")
-                api("io.insert-koin:koin-compose:1.0.4")
-              //ViewModel
+                ///// KOIN /////
+                implementation(project.dependencies.platform("io.insert-koin:koin-bom:3.5.3"))
+                implementation("io.insert-koin:koin-core")
+                implementation("io.insert-koin:koin-compose")
+                //ViewModel
                 // ViewModel utilities for Compose
                 //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
                 //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -109,6 +110,6 @@ android {
     }
     java {
         sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
-        targetCompatibility  = org.gradle.api.JavaVersion.VERSION_17
+        targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
     }
 }

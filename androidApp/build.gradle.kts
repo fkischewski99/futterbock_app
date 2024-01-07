@@ -35,4 +35,10 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+
+    dependencies{
+        implementation(platform("io.insert-koin:koin-bom:3.5.3"))
+        implementation("io.insert-koin:koin-core")
+        implementation("io.insert-koin:koin-android")
+    }
 }
